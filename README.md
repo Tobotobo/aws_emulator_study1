@@ -28,6 +28,36 @@ https://stackport.cloud/
 ローカルエミュレーターと実際のAWSアカウントに対応した、汎用的なAWSリソースブラウザ。  
 S3、DynamoDB、Lambda、SQS、IAM、EC2、CloudWatch Logs、Secrets Manager専用のUIを使用して、35種類のAWSサービスにわたるリソースを閲覧、検査、管理できます。
 
+### 構成
+
+```mermaid
+
+flowchart LR
+    subgraph host["Windows 11"]
+        browser["ブラウザ"]
+        terminal["PowerShell / curl.exe / wslc"]
+        files[("./emulator ディレクトリ")]
+    end
+
+    subgraph wsl["WSL コンテナ環境（wslc）"]
+        subgraph network["共有ネットワーク名前空間（aws-emulator）"]
+            emulator["aws-emulator<br/>AWS API :9297"]
+            stackport["stackport<br/>Web UI :8080"]
+            cli["aws-cli"]
+        end
+    end
+
+    browser -->|"127.0.0.1:8297 → :8080"| stackport
+    terminal -->|"127.0.0.1:9297 → :9297<br/>HTTPS / health check"| emulator
+    terminal -->|"wslc exec -it aws-cli bash"| cli
+    stackport -->|"https://localhost:9297"| emulator
+    cli -->|"https://localhost:9297"| emulator
+
+    files -->|"RW: /home/emulator/.aws/emulator"| emulator
+    files -.->|"RO: /emulator<br/>認証情報・設定・CA証明書"| stackport
+    files -.->|"RO: /emulator<br/>認証情報・設定・CA証明書"| cli
+```
+
 ### aws-emulator イメージをビルド
 
 Getting started with Docker  
