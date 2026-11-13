@@ -1,3 +1,7 @@
+---
+template: notebook
+---
+
 # aws_emulator_study1
 
 ## 概要
