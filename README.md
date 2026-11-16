@@ -83,6 +83,17 @@ ENTRYPOINT ["aws-emulator", "-b", "0.0.0.0"]
 wslc build -t aws-emulator .
 ```
 
+バージョン確認
+```sh
+wslc run --rm aws-emulator -v
+```
+
+```
+Version: 1.0.471
+Release date: 2026.11.16
+Commit: 91eb64ca5a78a7d78f4748085e65681abc417e15
+```
+
 ### aws-emulator コンテナを起動
 
 ```sh
